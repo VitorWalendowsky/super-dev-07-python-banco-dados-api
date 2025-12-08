@@ -1,0 +1,55 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.env
+.venv
+venv/
+env/
+ENV/
+pip-wheel-metadata/
+.mypy_cache/
+.dmypy.json
+.pytest_cache/
+.coverage
+coverage.xml
+.cache/
+*.log
+
+# --- FastAPI/Uvicorn ---
+*.db
+*.sqlite3
+instance/
+*.pid
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+
+# --- Virtual environment ---
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# --- Docker ---
+*.pid
+*.tar
+*.data
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
+
+# --- Environment & config secrets ---
+*.env
+*.local
