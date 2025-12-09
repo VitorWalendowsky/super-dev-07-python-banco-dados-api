@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from datetime import datetime
 
 app = FastAPI()
 
@@ -67,9 +68,7 @@ def nome_completo(nome: str, sobrenome: str):
     return {"nomeCompleto": nome_completo}
 
 @app.get("/calcular/ano-nascimento")
-def calcular_ano_nascimento(idade: int):
-    from datetime import datetime
-    ano_atual = datetime.now().year
+def calcular_ano_nascimento(idade: int, ano_atual: int):
     ano_nascimento = ano_atual - idade
     return {"anoNascimento": ano_nascimento}
 
