@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
+from classes import AlunoCalcularFrequencia, AlunoCalcularMedia, CarroAutonomia, PedidoTotal, ProdutoDesconto
+
 app = FastAPI()
 
 @app.get("/greetings")
@@ -39,6 +41,25 @@ def calculadora_expert(operacao: str, n1: int, n2: int):
             "resultado": resultado,
         }
     
+
+
+
+@app.post("/aluno/calcular-media")
+def calcular_media(aluno_dados: AlunoCalcularMedia):
+    nota1 = aluno_dados.nota1
+    nota2 = aluno_dados.nota2
+    nota3 = aluno_dados.nota3
+    media = (nota1 + nota2 + nota3) / 3
+    return {
+        "media": media,
+        "nome_completo": aluno_dados.nome_completo
+    }
+
+
+
+
+
+
 # Criar um endpoint 'pessoa/nome-completo' para concatenar o nome da pessoa
 #   Receber dois query params: nome e sobrenome
 #   Retornar no seguinte formato {"nomeCompleto": "John Doe"}
@@ -91,3 +112,106 @@ def calcular_imc(altura: float, peso: float):
         status = "Obesidade III"
     
     return {"imc": round(imc, 2), "status": status}
+
+
+
+# exemplo1 Criar um endpoint do tipo POST aluno/calcular-frequencia
+# Payload:
+#  nome do caluno
+#  quantidade letivos
+#  quantidade presenças
+# 
+# qtd letivos 100
+# qtd presencas 
+# (qtd presencas * 100) / qtd letivos
+
+
+@app.post("/aluno/calcular-frequencia")
+def calcular_frequencia(aluno_dados: AlunoCalcularFrequencia):
+    qtd_letivos = aluno_dados.qtd_letivos
+    qtd_presencas = aluno_dados.qtd_presencas
+    frequencia = (qtd_presencas * 100) / qtd_letivos
+    return{
+        "frequencia": frequencia,
+        "nome_completo": aluno_dados.nome_completo
+    }
+
+# Ex.2 Criar um endpoint do tipo POST /produto/calcular-desconto
+# Criar uma classe ProdutoDesconto
+#   nome
+#   preco_original
+#   percentual_desconto
+# Payload:
+#   nome do produto
+#   preço original
+#   percentual de desconto (0 a 100)
+#
+# Fórmulas:
+#   valor_desconto = (preco_original * percentual_desconto) / 100
+#   preco_final = preco_original - valor_desconto
+
+@app.post("/produto/calcular-desconto")
+def calcular_desconto(produto_dados: ProdutoDesconto):
+    valor_desconto = (produto_dados.preco_original * produto_dados.percentual_desconto) / 100
+    preco_final = produto_dados.preco_original - valor_desconto
+    return{
+        "nome": produto_dados.nome,
+        "preco_original": produto_dados.preco_original,
+        "percentual_desconto": produto_dados.percentual_desconto,
+        "valor_desconto": valor_desconto,
+        "preco_final": preco_final
+    }
+
+
+# Ex.3 Criar um endpoint do tipo POST /carro/calcular-autonomia
+# Criar uma classe CarroAutonomia
+#   modelo
+#   consumo_por_litro
+#   quantidade_combustivel
+# Payload:
+#   modelo do carro
+#   consumo por litro (km/l)
+#   quantidade de combustível no tanque (litros)
+#
+# Fórmula:
+#   autonomia = consumo_por_litro * quantidade_combustivel
+
+@app.post("/carro/calcular-autonomia")
+def calcular_autonomia(carro_dados: CarroAutonomia):
+    autonomia = carro_dados.consumo_por_litro * carro_dados.quantidade_combustivel0
+    return{
+        "modelo": carro_dados.modelo,
+        "consumo_por_litro": carro_dados.consumo_por_litro,
+        "quantidade_combustivel": carro_dados.quantidade_combustivel,
+        "autonomia": autonomia
+    }
+
+
+# Ex.4 Criar um endpoint do tipo POST /pedido/calcular-total
+# Criar uma classe PedidoTotal
+#   descricao
+#   quantidade
+#   valor_unitario
+# Payload:
+#   descrição do pedido
+#   quantidade de itens
+#   valor unitário
+#
+# Fórmulas:
+#   subtotal = quantidade * valor_unitario
+#   taxa = subtotal * 0.05  (5% de taxa de serviço)
+#   total = subtotal + taxa
+
+@app.post("/pedido/calcular-total")
+def calcular_total(pedido_dados: PedidoTotal):
+    subtotal = pedido_dados.quantidade * pedido_dados.preco_unitario
+    taxa = subtotal * 0.05
+    total = subtotal + taxa
+    return{
+        "descricao": pedido_dados.descricao,
+        "quanttidade": pedido_dados.quantidade,
+        "preco_unitario": pedido_dados.preco_unitario,
+        "subtotal": subtotal,
+        "taxa": taxa,
+        "total": total
+    }
