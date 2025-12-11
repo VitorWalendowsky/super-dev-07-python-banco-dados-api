@@ -1,7 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularFrequencia, AlunoCalcularMedia, CarroAutonomia, PedidoTotal, ProdutoDesconto
+from classes import AlunoCalcularFrequencia, AlunoCalcularMedia, CarroAutonomia, CategoriaCriar, PedidoTotal, ProdutoDesconto
+from src.repositorios import mercado_categoria_repositorio
 
 app = FastAPI()
 
@@ -215,3 +216,33 @@ def calcular_total(pedido_dados: PedidoTotal):
         "taxa": taxa,
         "total": total
     }
+
+
+
+
+#Carregar todas as categorias
+
+@app.get("/api/v1/categorias", tags=["Categorias"])
+def listar_categorias():
+    categorias = mercado_categoria_repositorio.obter_todos()
+    return categorias
+
+
+@app.post("/api/v1/categorias", tags=["Categorias"])
+def cadastrar_categoria(categoria: CategoriaCriar):
+    mercado_categoria_repositorio.cadastrar(categoria.nome)
+    return {"mensagem": "Categoria cadastrada com sucesso!"}
+
+
+# Put - /api/v1/categorias/10
+# metodo delete
+
+@app.delete("/api/v1/categorias/{id}", tags=["Categorias"])
+def apagar_categoria(id: int):
+    linhas_afetadas = mercado_categoria_repositorio.apagar(id)
+    if linhas_afetadas == 0:
+        raise HTTPException(
+            status_code=404,
+            detail="Categoria não encontrada"
+        )
+    return {"mensagem": "Categoria apagada com sucesso!"}
