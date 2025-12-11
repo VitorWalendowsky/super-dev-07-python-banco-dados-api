@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from datetime import datetime
 
-from classes import AlunoCalcularFrequencia, AlunoCalcularMedia, CarroAutonomia, CategoriaCriar, PedidoTotal, ProdutoDesconto
+from classes import AlunoCalcularFrequencia, AlunoCalcularMedia, CarroAutonomia, CategoriaCriar, CategoriaEditar, PedidoTotal, ProdutoDesconto
 from src.repositorios import mercado_categoria_repositorio
 
 app = FastAPI()
@@ -246,3 +246,14 @@ def apagar_categoria(id: int):
             detail="Categoria não encontrada"
         )
     return {"mensagem": "Categoria apagada com sucesso!"}
+
+
+@app.put("/api/v1/categorias/{id}", tags=["Categorias"])
+def alterar_categoria(id: int, categoria: CategoriaEditar):
+    linhas_afetadas = mercado_categoria_repositorio.atualizar(id, categoria.nome)
+    if linhas_afetadas == 0:
+        raise HTTPException(
+            status_code=404,
+            detail="Categoria não encontrada"
+        )
+    return {"mensagem": "Categoria atualizada com sucesso!"}
